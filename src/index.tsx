@@ -1,12 +1,15 @@
+import App from "./App";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 import "./translation";
+
+import "./index.css";
+import "@fontsource/roboto/300.css";
 import "@fontsource/roboto";
-import { css } from "@emotion/react";
+import "@fontsource/roboto/700.css";
+import "@fontsource/roboto/900.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(

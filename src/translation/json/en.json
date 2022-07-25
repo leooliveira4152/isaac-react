@@ -1,7 +1,9 @@
 {
-  "mainTitle": "testingles",
+  "debug": {
+    "trigger": "Debug"
+  },
   "mainOptions": {
-    "randomize": "Randomize",
-    "settings": "Settings"
+    "randomize": "RANDOMIZE",
+    "settings": "SETTINGS"
   }
 }

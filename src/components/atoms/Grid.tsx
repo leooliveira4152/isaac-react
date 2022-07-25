@@ -1,17 +1,20 @@
-/** @jsx jsx */
-import { jsx, css } from "@emotion/react";
-
-import React, { MouseEventHandler, useState } from "react";
+/** @jsxImportSource @emotion/react */
+import React from "react";
 import { Theme } from "../../theme";
+import { css } from "@emotion/react";
+
+import { DEFAULT_WINDOW_WIDTH, WINDOW_SIZES } from "../../common";
+import { getWindowSize, processWindowSizes } from "../../scripts";
 
 interface GridProps {
   children?: JSX.Element | JSX.Element[] | string;
   container?: boolean;
   item?: boolean;
   align?: React.CSSProperties["justifyContent"];
-  span?: number;
   style?: React.CSSProperties;
 }
+
+type WindowSizeProps = { [key in keyof typeof WINDOW_SIZES]?: number | false };
 
 interface GridStyles {
   grid: React.CSSProperties;
@@ -22,24 +25,56 @@ interface GridStyles {
 /*
 "item" and "container" are mutually exclusive
 "align" property only works with container
-"span" property only works with item
+"span" properties (xs, sm, md, lg, xl) only works with item
 */
 
-const Button = ({ children, container, item, align, span, style }: GridProps): JSX.Element => {
+const Grid = ({
+  children,
+  container,
+  item,
+  align,
+  xs,
+  sm,
+  md,
+  lg,
+  xl,
+  style,
+}: GridProps & WindowSizeProps): JSX.Element => {
+  const [screenSize, setScreenSize] = React.useState<string>(
+    getWindowSize(window ? window.innerWidth : DEFAULT_WINDOW_WIDTH)
+  );
+
+  React.useEffect(() => {
+    const changeScreenSize = () => setScreenSize(getWindowSize(window.innerWidth));
+    window.addEventListener("resize", changeScreenSize);
+    return () => window.removeEventListener("resize", changeScreenSize);
+  }, []);
+
+  const processedScreenSizes = processWindowSizes({ xs, sm, md, lg, xl });
+  if (!container && !processedScreenSizes[screenSize]) return <></>;
+
   const styles: GridStyles = {
-    grid: { textAlign: "center", display: "flex", margin: Theme.spacing(1) },
-    container: { width: "100%", justifyContent: align },
-    item: { width: `${span ? (span / 12) * 100 : 100}%` }
+    grid: { textAlign: "center", display: "flex" },
+    container: { width: "100%", justifyContent: align || "center", flexWrap: "wrap" },
+    item: {
+      width: `calc(${(Number(processedScreenSizes[screenSize]) / 12) * 100}% - ${Theme.spacing(2)})`,
+      justifyContent: "center",
+      alignItems: "center",
+      padding: Theme.spacing(1),
+    },
   };
 
   return (
     <div
-      css={css({ "&:last-child": { padding: "40px" } })}
-      style={{ ...styles.grid, ...(container ? styles.container : item ? styles.item : {}), ...style }}
+      css={css({
+        ...styles.grid,
+        ...(container ? styles.container : item ? styles.item : {}),
+        ...style,
+      })}
     >
       {children}
     </div>
   );
 };
 
-export default Button;
+export default Grid;

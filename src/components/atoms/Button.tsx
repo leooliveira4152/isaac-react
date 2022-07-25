@@ -1,10 +1,11 @@
-import React, { MouseEventHandler, useState } from "react";
-import { css } from "@emotion/react";
+/** @jsxImportSource @emotion/react */
+import React from "react";
 import { Theme } from "../../theme";
+import { css } from "@emotion/react";
 
 interface ButtonProps {
   children?: JSX.Element | JSX.Element[] | string;
-  onClick?: MouseEventHandler;
+  onClick?: React.MouseEventHandler;
   style?: React.CSSProperties;
 }
 
@@ -18,29 +19,28 @@ const Button = ({ children, onClick, style }: ButtonProps): JSX.Element => {
     button: {
       color: Theme.colors.primary.main,
       background: Theme.colors.background.dark,
-      border: `1px solid ${Theme.colors.primary.dark}88`,
-      borderRadius: "4px",
-      padding: "8px",
+      border: `1px solid ${Theme.colors.primary.dark}${Theme.opacity(0.6)}`,
+      borderRadius: Theme.spacing(1),
+      padding: Theme.spacing(2),
       textAlign: "center",
-      fontSize: "16px",
-      cursor: "pointer",
       fontFamily: "Roboto",
-      minWidth: "50px"
+      fontSize: "16px",
+      fontWeight: 900,
+      cursor: "pointer",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
     },
-    buttonHover: { background: Theme.colors.background.light }
+    buttonHover: { background: Theme.colors.background.light },
   };
 
-  const [onHover, setOnHover] = useState(false);
-  const anotherStyle = css({
-    textDecoration: "underline",
-    color: "blue"
-  });
+  const [onHover, setOnHover] = React.useState(false);
+
   return (
     <button
       onClick={onClick}
       onMouseOver={() => setOnHover(true)}
       onMouseOut={() => setOnHover(false)}
-      style={{ ...styles.button, ...style, ...(onHover ? styles.buttonHover : {}) }}
+      css={css({ ...styles.button, ...style, ...(onHover ? styles.buttonHover : {}) })}
     >
       {children}
     </button>

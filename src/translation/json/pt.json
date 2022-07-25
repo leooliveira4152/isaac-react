@@ -1,3 +1,9 @@
 {
-  "mainTitle": "Teste"
+  "debug": {
+    "trigger": "Debug"
+  },
+  "mainOptions": {
+    "randomize": "RANDOMIZAR",
+    "settings": "CONFIGURAÇÕES"
+  }
 }
